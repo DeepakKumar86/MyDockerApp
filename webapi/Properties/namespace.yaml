@@ -1,0 +1,8 @@
+﻿# kubectl apply -f C:\SourceCode\MyDockerApp\webapi\Properties\namespace.yaml
+
+kind: Namespace
+apiVersion: v1
+metadata: 
+ name: nginx
+
+
