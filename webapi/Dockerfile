@@ -1,28 +1,22 @@
-# Use the official .NET runtime as a base image
-FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS base
+﻿# Single-stage build
+FROM mcr.microsoft.com/dotnet/sdk:8.0
+
+# Set working directory
 WORKDIR /app
-EXPOSE 8080
 
-
-
-# Use the SDK image to build the app
-FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
-WORKDIR /src
+# Copy all source code
 COPY . .
-WORKDIR /src/webapi
+
+# Publish the application
+WORKDIR /app/webapi
 RUN dotnet publish -c Release -o /app/publish
 
-# Build runtime image
-FROM base AS final
-WORKDIR /app
-COPY --from=build /app/publish .
+# Set working directory for runtime
+WORKDIR /app/publish
+
+# Expose port
+EXPOSE 8080
+ENV ASPNETCORE_URLS=http://+:8080
+
+# Run the application
 ENTRYPOINT ["dotnet", "webapi.dll"]
-
-#build image
-#docker build -t webapi:latest -f webapi/Dockerfile .
-
-#run container
-#docker run -d -p 8080:8080 --name webapi-container webapi:lates
-
-#run    http://localhost:5001
-   
